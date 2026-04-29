@@ -11,13 +11,6 @@
 
 ## handson-01-network
 
-作成対象:
-- VPC
-- Public Subnet x2
-- Internet Gateway
-- Route Table
-- Route
-
 デプロイ例:
 
 ```bash
@@ -28,10 +21,6 @@ aws cloudformation deploy \
 
 ## handson-02-security
 
-作成対象:
-- ALB Security Group
-- ECS Security Group
-
 ```bash
 aws cloudformation deploy \
   --template-file cloudformation/handson/02-security.yaml \
@@ -40,11 +29,6 @@ aws cloudformation deploy \
 
 ## handson-03-alb
 
-作成対象:
-- ALB
-- Target Group
-- Listener
-
 ```bash
 aws cloudformation deploy \
   --template-file cloudformation/handson/03-alb.yaml \
@@ -52,14 +36,6 @@ aws cloudformation deploy \
 ```
 
 ## handson-04-ecs-cluster
-
-作成対象:
-- ECS Cluster
-- Task Execution Role
-- Task Role
-- CloudWatch Logs
-- Task Definition
-- ECS Service
 
 ```bash
 aws cloudformation deploy \
@@ -71,9 +47,6 @@ aws cloudformation deploy \
 ```
 
 ## handson-05-cloudfront
-
-作成対象:
-- CloudFront Distribution
 
 ```bash
 aws cloudformation deploy \
