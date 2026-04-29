@@ -36,5 +36,7 @@ jobs:
           target_branch: gh-pages
           build_dir: .
           keep_history: false
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
