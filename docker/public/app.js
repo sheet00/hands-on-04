@@ -38,7 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Bedrock API の呼び出しに失敗しました。');
+                const detailMessage =
+                    data.details?.Message ||
+                    data.details?.message ||
+                    data.error ||
+                    'Bedrock API の呼び出しに失敗しました。';
+
+                result.textContent = `エラー: ${detailMessage}`;
+                responseJson.textContent = JSON.stringify(data, null, 2);
+                statusLine.textContent = `Request failed${data.meta?.status ? ` (${data.meta.status})` : ''}.`;
+                return;
             }
 
             result.textContent = data.text;
@@ -46,7 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
             statusLine.textContent = `Model: ${data.modelId} / Region: ${data.region}`;
         } catch (error) {
             result.textContent = `エラー: ${error.message}`;
-            responseJson.textContent = JSON.stringify({ error: error.message }, null, 2);
+            responseJson.textContent = JSON.stringify(
+                {
+                    error: error.message
+                },
+                null,
+                2
+            );
             statusLine.textContent = 'Request failed.';
         } finally {
             sendButton.disabled = false;
