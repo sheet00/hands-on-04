@@ -1,0 +1,6 @@
+.git
+.idea
+docker/.env
+docker/node_modules
+node_modules
+npm-debug.log
