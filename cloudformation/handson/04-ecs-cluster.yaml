@@ -1,10 +1,37 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Hands-on 04 step 04 ECS cluster stack
+Description: Hands-on 04 step 04 ECS cluster and service stack
 
 Parameters:
   ProjectName:
     Type: String
     Default: handson-04
+  NetworkStackName:
+    Type: String
+    Default: handson-01-network
+  SecurityStackName:
+    Type: String
+    Default: handson-02-security
+  AlbStackName:
+    Type: String
+    Default: handson-03-alb
+  ContainerPort:
+    Type: Number
+    Default: 3000
+  DesiredCount:
+    Type: Number
+    Default: 1
+  EcrImageUri:
+    Type: String
+    Default: public.ecr.aws/o7b9y7i7/handson-04-repo:latest
+  BedrockApiKey:
+    Type: String
+    NoEcho: true
+  BedrockModelId:
+    Type: String
+    Default: amazon.nova-micro-v1:0
+  BedrockRegion:
+    Type: String
+    Default: us-east-1
 
 Resources:
   EcsCluster:
@@ -44,6 +71,65 @@ Resources:
       LogGroupName: !Sub /ecs/${ProjectName}
       RetentionInDays: 7
 
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${ProjectName}-task
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !GetAtt EcsTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt EcsTaskRole.Arn
+      ContainerDefinitions:
+        - Name: web
+          Image: !Ref EcrImageUri
+          Essential: true
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+              Protocol: tcp
+          Environment:
+            - Name: PORT
+              Value: !Sub '${ContainerPort}'
+            - Name: AWS_BEARER_TOKEN_BEDROCK
+              Value: !Ref BedrockApiKey
+            - Name: BEDROCK_MODEL_ID
+              Value: !Ref BedrockModelId
+            - Name: AWS_REGION
+              Value: !Ref BedrockRegion
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+
+  EcsService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub ${ProjectName}-service
+      Cluster: !Ref EcsCluster
+      DesiredCount: !Ref DesiredCount
+      LaunchType: FARGATE
+      TaskDefinition: !Ref TaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !ImportValue
+              Fn::Sub: ${SecurityStackName}-EcsSecurityGroupId
+          Subnets:
+            - !ImportValue
+              Fn::Sub: ${NetworkStackName}-PublicSubnet1Id
+            - !ImportValue
+              Fn::Sub: ${NetworkStackName}-PublicSubnet2Id
+      LoadBalancers:
+        - ContainerName: web
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !ImportValue
+            Fn::Sub: ${AlbStackName}-TargetGroupArn
+
 Outputs:
   ClusterName:
     Value: !Ref EcsCluster
@@ -61,3 +147,11 @@ Outputs:
     Value: !Ref LogGroup
     Export:
       Name: !Sub ${AWS::StackName}-LogGroupName
+  TaskDefinitionArn:
+    Value: !Ref TaskDefinition
+    Export:
+      Name: !Sub ${AWS::StackName}-TaskDefinitionArn
+  ServiceName:
+    Value: !GetAtt EcsService.Name
+    Export:
+      Name: !Sub ${AWS::StackName}-ServiceName

@@ -7,7 +7,7 @@ Parameters:
     Default: handson-04
   NetworkStackName:
     Type: String
-    Default: handson-04-network
+    Default: handson-01-network
   ContainerPort:
     Type: Number
     Default: 3000

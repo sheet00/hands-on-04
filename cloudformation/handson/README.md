@@ -2,15 +2,14 @@
 
 このフォルダには、完成形テンプレートを段階的に分割した CloudFormation を置きます。
 
-想定順序:
-1. `01-network.yaml`
-2. `02-security.yaml`
-3. `03-alb.yaml`
-4. `04-ecs-cluster.yaml`
-5. `05-ecs-service.yaml`
-6. `06-cloudfront.yaml`
+スタック名は次の通りにしてください。
+1. `handson-01-network` -> `01-network.yaml`
+2. `handson-02-security` -> `02-security.yaml`
+3. `handson-03-alb` -> `03-alb.yaml`
+4. `handson-04-ecs-cluster` -> `04-ecs-cluster.yaml`
+5. `handson-05-cloudfront` -> `05-cloudfront.yaml`
 
-## 01-network.yaml
+## handson-01-network
 
 作成対象:
 - VPC
@@ -24,10 +23,10 @@
 ```bash
 aws cloudformation deploy \
   --template-file cloudformation/handson/01-network.yaml \
-  --stack-name handson-04-network
+  --stack-name handson-01-network
 ```
 
-## 02-security.yaml
+## handson-02-security
 
 作成対象:
 - ALB Security Group
@@ -36,10 +35,10 @@ aws cloudformation deploy \
 ```bash
 aws cloudformation deploy \
   --template-file cloudformation/handson/02-security.yaml \
-  --stack-name handson-04-security
+  --stack-name handson-02-security
 ```
 
-## 03-alb.yaml
+## handson-03-alb
 
 作成対象:
 - ALB
@@ -49,46 +48,35 @@ aws cloudformation deploy \
 ```bash
 aws cloudformation deploy \
   --template-file cloudformation/handson/03-alb.yaml \
-  --stack-name handson-04-alb
+  --stack-name handson-03-alb
 ```
 
-## 04-ecs-cluster.yaml
+## handson-04-ecs-cluster
 
 作成対象:
 - ECS Cluster
 - Task Execution Role
 - Task Role
 - CloudWatch Logs
-
-```bash
-aws cloudformation deploy \
-  --template-file cloudformation/handson/04-ecs-cluster.yaml \
-  --stack-name handson-04-ecs-base \
-  --capabilities CAPABILITY_NAMED_IAM
-```
-
-## 05-ecs-service.yaml
-
-作成対象:
 - Task Definition
 - ECS Service
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/handson/05-ecs-service.yaml \
-  --stack-name handson-04-ecs-service \
+  --template-file cloudformation/handson/04-ecs-cluster.yaml \
+  --stack-name handson-04-ecs-cluster \
   --capabilities CAPABILITY_NAMED_IAM \
   --parameter-overrides \
     BedrockApiKey=YOUR_BEDROCK_API_KEY
 ```
 
-## 06-cloudfront.yaml
+## handson-05-cloudfront
 
 作成対象:
 - CloudFront Distribution
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation/handson/06-cloudfront.yaml \
-  --stack-name handson-04-cloudfront
+  --template-file cloudformation/handson/05-cloudfront.yaml \
+  --stack-name handson-05-cloudfront
 ```

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Hands-on 04 step 06 CloudFront stack
+Description: Hands-on 04 step 05 CloudFront stack
 
 Parameters:
   ProjectName:
@@ -7,7 +7,7 @@ Parameters:
     Default: handson-04
   AlbStackName:
     Type: String
-    Default: handson-04-alb
+    Default: handson-03-alb
 
 Resources:
   CloudFrontDistribution:
