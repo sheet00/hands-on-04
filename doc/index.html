@@ -150,11 +150,13 @@ ECR--&gt;&gt;ECS: イメージ返却<br />
 ECS-&gt;&gt;ECS: コンテナ起動<br />
 ECS--&gt;&gt;U: レスポンス返却</p>
 </div>
-&lt;script type="module"&gt;
+<script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
 mermaid.initialize({ startOnLoad: true });
-await mermaid.run();
-&lt;/script&gt;
+window.addEventListener('load', () => {
+  mermaid.run();
+});
+</script>
 <footer>Hands-on 04</footer>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="4" data-paginate="true" data-footer="Hands-on 04" data-theme="default" data-style="section {
@@ -429,7 +431,7 @@ code {
 <li><strong>Subnet</strong>: その中を小さく分けたネットワーク</li>
 <li><strong>IGW / Route Table</strong>: インターネットへ出るための経路</li>
 </ul>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 AWS 上で、家の中にルーターを 1 台置いて、自分専用のネットワークを作るイメージです。
 </div>
 <footer>Hands-on 04</footer>
@@ -527,7 +529,7 @@ code {
 <li><strong>ALB 用</strong>: CloudFront からの HTTP 通信のみ許可</li>
 <li><strong>ECS 用</strong>: ALB からのコンテナポート（3000）通信のみ許可</li>
 </ul>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 PC でいうところの「ファイアウォール」に近い役割です。
 </div>
 <footer>Hands-on 04</footer>
@@ -616,7 +618,7 @@ code {
 ;" data-marpit-pagination-total="24">
 <h2 id="step-3-alb--%E3%83%AD%E3%83%BC%E3%83%89%E3%83%90%E3%83%A9%E3%83%B3%E3%82%B5%E3%83%BC%E3%81%A8%E3%81%AF">Step 3: ALB / ロードバランサーとは</h2>
 <p>Web システムの入口となり、ユーザーからのリクエストを後ろのサーバーへ振り分けます。</p>
-<div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.85em;">
 <div>
 <h3 id="%E3%81%AA%E3%81%9C%E5%BF%85%E8%A6%81%E3%81%AA%E3%81%AE%E3%81%8B">なぜ必要なのか？</h3>
 <ul>
@@ -730,7 +732,7 @@ code {
 <li>「<strong>Create API key</strong>」をクリックして名前を入力</li>
 <li>発行された <strong>API キー</strong>をコピーして控えておく</li>
 </ol>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 <b>補足</b>: 本来は API キーではなく「IAM ロール（ECS タスクロール）」による認証が推奨されます。本ハンズオンでは手順を簡略化するため、API キーを使用しています。
 </div>
 <footer>Hands-on 04</footer>
@@ -772,7 +774,7 @@ code {
 ;" data-marpit-pagination-total="24">
 <h2 id="step-4-ecs-cluster--ecs-%E3%81%A8%E3%81%AF">Step 4: ECS Cluster / ECS とは</h2>
 <p>Docker コンテナを AWS 上で効率よく管理・実行するためのサービスです。</p>
-<div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.85em;">
 <div>
 <h3 id="%E4%B8%BB%E3%81%AA%E6%A7%8B%E6%88%90%E8%A6%81%E7%B4%A0">主な構成要素</h3>
 <ul>
@@ -829,7 +831,7 @@ code {
 ;" data-marpit-pagination-total="24">
 <h2 id="ecs-%E3%81%AE%E8%B5%B7%E5%8B%95%E3%82%BF%E3%82%A4%E3%83%97ec2-vs-fargate">ECS の起動タイプ（EC2 vs Fargate）</h2>
 <p>コンテナを「どこで」動かすかの選択肢です。</p>
-<div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.85em;">
 <div>
 <h3 id="ec2%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E7%AE%A1%E7%90%86%E3%81%82%E3%82%8A">EC2（サーバー管理あり）</h3>
 <ul>
@@ -849,7 +851,7 @@ code {
 </ul>
 </div>
 </div>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 このハンズオンでは、運用の手間が少ない <b>Fargate</b> を利用します。
 </div>
 <footer>Hands-on 04</footer>
@@ -945,7 +947,7 @@ code {
 <li><strong>SG を変更</strong>: ECS 用の Security Group で、自分の IP（または <code>0.0.0.0/0</code>）からの <code>3000</code> ポートを許可する設定を追加</li>
 <li><strong>再確認</strong>: 直接アクセスできるようになったか確認</li>
 </ol>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 <b>注意</b>: 実運用ではセキュリティのため、直接アクセスは許可せず、ALB 経由のみに絞るのが一般的です。
 </div>
 <footer>Hands-on 04</footer>
@@ -1032,7 +1034,7 @@ code {
 ;" data-marpit-pagination-total="24">
 <h2 id="%E3%81%AA%E3%81%9C-cdn-%E3%82%92%E4%BD%BF%E3%81%86%E3%81%AE%E3%81%8B">なぜ CDN を使うのか？</h2>
 <p>主な目的は「高速配信」「負荷軽減」そして「セキュリティ」です。</p>
-<div>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; font-size: 0.75em;">
 <div>
 <h3 id="%E9%9D%99%E7%9A%84%E3%82%B3%E3%83%B3%E3%83%86%E3%83%B3%E3%83%84%E3%81%AE%E9%85%8D%E4%BF%A1">静的コンテンツの配信</h3>
 <ul>
@@ -1146,7 +1148,7 @@ code {
 <li><strong>Bedrock を実行</strong>: 画面からプロンプトを入力し、AI の回答が返るか確認</li>
 <li><strong>ECS ログの確認</strong>: CloudWatch Logs で <code>[bedrock-request]</code> などのログが出ているか見る</li>
 </ol>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 <b>ゴール！</b>: CloudFront → ALB → ECS → Bedrock という全ての連携が成功です。
 </div>
 <footer>Hands-on 04</footer>
@@ -1197,7 +1199,7 @@ code {
 <li><code>handson-01-network</code> を削除</li>
 <li><strong>Bedrock API キー</strong>を削除（コンソールから実施）</li>
 </ol>
-<div>
+<div style="margin-top: 20px; font-size: 0.9em; border-top: 1px solid #ccc; pt: 10px;">
 <b>注意</b>: スタックには依存関係があるため、必ず後ろの Step から順番に削除してください。
 </div>
 <footer>Hands-on 04</footer>
