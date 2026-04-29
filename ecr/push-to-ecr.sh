@@ -2,21 +2,29 @@
 set -euo pipefail
 
 AWS_PROFILE="${AWS_PROFILE:-handson}"
-AWS_REGION="${AWS_REGION:-ap-northeast-1}"
-AWS_ACCOUNT_ID="${AWS_ACCOUNT_ID:-YOUR_ACCOUNT_ID}"
+AWS_REGION="${AWS_REGION:-us-east-1}"
 REPOSITORY_NAME="${REPOSITORY_NAME:-handson-04-repo}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 
-if [ "${AWS_ACCOUNT_ID}" = "YOUR_ACCOUNT_ID" ]; then
-    echo "AWS_ACCOUNT_ID を設定してください。"
-    exit 1
+LOCAL_IMAGE="${REPOSITORY_NAME}:${IMAGE_TAG}"
+
+echo "Ensuring public repository exists..."
+if ! AWS_PROFILE="${AWS_PROFILE}" aws ecr-public describe-repositories --region "${AWS_REGION}" --repository-names "${REPOSITORY_NAME}" >/dev/null 2>&1; then
+    AWS_PROFILE="${AWS_PROFILE}" aws ecr-public create-repository --region "${AWS_REGION}" --repository-name "${REPOSITORY_NAME}" >/dev/null
 fi
 
-LOCAL_IMAGE="${REPOSITORY_NAME}:${IMAGE_TAG}"
-ECR_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${REPOSITORY_NAME}:${IMAGE_TAG}"
+REPOSITORY_URI="$(
+    AWS_PROFILE="${AWS_PROFILE}" aws ecr-public describe-repositories \
+        --region "${AWS_REGION}" \
+        --repository-names "${REPOSITORY_NAME}" \
+        --query 'repositories[0].repositoryUri' \
+        --output text
+)"
 
-echo "Logging in to ECR..."
-AWS_PROFILE="${AWS_PROFILE}" aws ecr get-login-password --region "${AWS_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+ECR_IMAGE="${REPOSITORY_URI}:${IMAGE_TAG}"
+
+echo "Logging in to ECR Public..."
+AWS_PROFILE="${AWS_PROFILE}" aws ecr-public get-login-password --region "${AWS_REGION}" | docker login --username AWS --password-stdin public.ecr.aws
 
 echo "Building Docker image..."
 docker build -f ecr/Dockerfile -t "${LOCAL_IMAGE}" .
