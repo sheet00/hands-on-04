@@ -4,7 +4,7 @@ Description: Hands-on 04 full stack for CloudFront + ALB + ECS Fargate + Bedrock
 Parameters:
   ProjectName:
     Type: String
-    Default: handson-04
+    Default: handson-04-full
   VpcCidr:
     Type: String
     Default: 10.0.0.0/16

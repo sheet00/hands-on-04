@@ -2,6 +2,10 @@
 
 `full-stack.yaml` は、ハンズオンの完成形を一気に作るための CloudFormation テンプレートです。
 
+デフォルトの `ProjectName` は `handson-04-full` です。
+完成形テンプレートで物理名を持つ主要リソースは、必ずこの `ProjectName` を接頭辞として使います。
+そのため `ProjectName` が重ならない限り、同一リージョン内で名前衝突しない前提です。
+
 作成対象:
 - VPC
 - Public Subnet x2
@@ -31,6 +35,7 @@ aws cloudformation deploy \
   --stack-name handson-04-full \
   --capabilities CAPABILITY_NAMED_IAM \
   --parameter-overrides \
+    ProjectName=handson-04-full \
     EcrImageUri=public.ecr.aws/o7b9y7i7/handson-04-repo:latest \
     BedrockApiKey=YOUR_BEDROCK_API_KEY \
     BedrockModelId=amazon.nova-micro-v1:0 \

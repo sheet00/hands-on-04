@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Hands-on 04 step 02 security stack
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: handson-04
+  NetworkStackName:
+    Type: String
+    Default: handson-04-network
+  ContainerPort:
+    Type: Number
+    Default: 3000
+
+Mappings:
+  RegionMap:
+    ap-northeast-1:
+      CloudFrontOriginFacingPrefixListId: pl-58a04531
+    us-east-1:
+      CloudFrontOriginFacingPrefixListId: pl-3b927c52
+
+Resources:
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ALB security group
+      VpcId: !ImportValue
+        Fn::Sub: ${NetworkStackName}-VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourcePrefixListId: !FindInMap [RegionMap, !Ref AWS::Region, CloudFrontOriginFacingPrefixListId]
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-alb-sg
+
+  EcsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ECS service security group
+      VpcId: !ImportValue
+        Fn::Sub: ${NetworkStackName}-VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
+          SourceSecurityGroupId: !Ref AlbSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-ecs-sg
+
+Outputs:
+  AlbSecurityGroupId:
+    Value: !Ref AlbSecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-AlbSecurityGroupId
+  EcsSecurityGroupId:
+    Value: !Ref EcsSecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-EcsSecurityGroupId

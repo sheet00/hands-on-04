@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Hands-on 04 step 03 ALB stack
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: handson-04
+  NetworkStackName:
+    Type: String
+    Default: handson-04-network
+  SecurityStackName:
+    Type: String
+    Default: handson-04-security
+  ContainerPort:
+    Type: Number
+    Default: 3000
+
+Resources:
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${ProjectName}-alb
+      Scheme: internet-facing
+      Type: application
+      SecurityGroups:
+        - !ImportValue
+          Fn::Sub: ${SecurityStackName}-AlbSecurityGroupId
+      Subnets:
+        - !ImportValue
+          Fn::Sub: ${NetworkStackName}-PublicSubnet1Id
+        - !ImportValue
+          Fn::Sub: ${NetworkStackName}-PublicSubnet2Id
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub ${ProjectName}-tg
+      VpcId: !ImportValue
+        Fn::Sub: ${NetworkStackName}-VpcId
+      Port: !Ref ContainerPort
+      Protocol: HTTP
+      TargetType: ip
+      HealthCheckPath: /
+      Matcher:
+        HttpCode: 200-399
+
+  AlbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+
+Outputs:
+  LoadBalancerArn:
+    Value: !Ref ApplicationLoadBalancer
+    Export:
+      Name: !Sub ${AWS::StackName}-LoadBalancerArn
+  LoadBalancerDnsName:
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
+    Export:
+      Name: !Sub ${AWS::StackName}-LoadBalancerDnsName
+  TargetGroupArn:
+    Value: !Ref TargetGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-TargetGroupArn
+  ListenerArn:
+    Value: !Ref AlbListener
+    Export:
+      Name: !Sub ${AWS::StackName}-ListenerArn
