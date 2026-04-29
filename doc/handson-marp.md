@@ -32,6 +32,13 @@ style: |
 この資料は、よくある Web システムを題材に、
 インフラを段階的に組み立てながら完成形へ到達するための説明用スライドです。
 </div>
+<br/>
+
+リポジトリ
+https://github.com/sheet00/hands-on-04
+
+DOC
+https://sheet00.github.io/hands-on-04/doc/
 
 ---
 
