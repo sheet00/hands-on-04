@@ -39,9 +39,11 @@ Mappings:
     ap-northeast-1:
       Az1: ap-northeast-1a
       Az2: ap-northeast-1c
+      CloudFrontOriginFacingPrefixListId: pl-58a04531
     us-east-1:
       Az1: us-east-1a
       Az2: us-east-1b
+      CloudFrontOriginFacingPrefixListId: pl-3b927c52
 
 Resources:
   VPC:
@@ -126,7 +128,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-          CidrIp: 0.0.0.0/0
+          SourcePrefixListId: !FindInMap [RegionMap, !Ref AWS::Region, CloudFrontOriginFacingPrefixListId]
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0

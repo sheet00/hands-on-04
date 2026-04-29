@@ -15,6 +15,7 @@
 前提:
 - コンテナイメージは `ECR Public` に push 済み
 - Bedrock API キーをスタック作成時のパラメータで渡す
+- ALB の Security Group は CloudFront managed prefix list からの HTTP のみ許可
 
 主要パラメータ:
 - `EcrImageUri`
@@ -39,3 +40,5 @@ aws cloudformation deploy \
 注意:
 - これは「完成形の参照用」です。ハンズオンではこの構成を見ながら、各リソースを個別に手動作成する想定です。
 - API キーは簡易化のためパラメータで渡しています。本番運用なら Secrets Manager などへ寄せたほうが安全です。
+- この設定で ALB への直接アクセスは CloudFront origin-facing IP に限定されます。
+- ただし「自分の CloudFront distribution だけ」に限定したい場合は、追加でカスタムヘッダー検証などを組み合わせるとより強くできます。
