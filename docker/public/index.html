@@ -1,55 +1,70 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWS Bedrock Hands-on</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }
-        textarea { width: 100%; height: 100px; margin-bottom: 10px; padding: 10px; }
-        button { padding: 10px 20px; background-color: #232f3e; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #3b4d61; }
-        #result { margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 4px; white-space: pre-wrap; }
-        .loading { color: #666; font-style: italic; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/vendor/daisyui/daisyui.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
+
 <body>
-    <h1>Amazon Bedrock Hands-on</h1>
-    <p>Claudeに何か聞いてみよう！</p>
-    <textarea id="prompt" placeholder="例: AWS CloudFrontとは何ですか？"></textarea>
-    <button onclick="askBedrock()">送信</button>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <main class="shell">
+        <section class="hero card shadow-2xl">
+            <div class="hero-body">
+                <div class="hero-copy">
+                    <p class="eyebrow">AWS Hands-on 04</p>
+                    <h1>Amazon Bedrock Playground</h1>
+                    <p class="lead">
+                        Claude に送るプロンプトを入力して、Bedrock 連携を試すためのシンプルな画面です。
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <div id="result">結果がここに表示されます</div>
+        <section class="workspace">
+            <div class="card panel shadow-xl">
+                <div class="card-body">
+                    <div class="section-head">
+                        <div>
+                            <p class="eyebrow">Prompt</p>
+                            <h2>Claude に聞く内容</h2>
+                        </div>
+                        <span class="badge badge-warning badge-soft">未接続</span>
+                    </div>
+                    <p class="input-caption">プロンプト</p>
+                    <textarea id="prompt" class="textarea textarea-bordered prompt-box"
+                        placeholder="例: CloudFront と ALB の役割の違いを教えて"></textarea>
+                    <div class="action-row">
+                        <button id="send-button" class="btn btn-primary btn-wide" type="button">送信</button>
+                    </div>
+                </div>
+            </div>
 
-    <script>
-        async function askBedrock() {
-            const prompt = document.getElementById('prompt').value;
-            const resultDiv = document.getElementById('result');
-            
-            if (!prompt) return alert('プロンプトを入力してください');
-
-            resultDiv.innerText = '考え中...';
-            resultDiv.classList.add('loading');
-
-            try {
-                const response = await fetch('/api/bedrock', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt })
-                });
-
-                const data = await response.json();
-                if (data.error) {
-                    resultDiv.innerText = 'エラー: ' + data.error;
-                } else {
-                    resultDiv.innerText = data.response;
-                }
-            } catch (err) {
-                resultDiv.innerText = '通信エラーが発生しました';
-            } finally {
-                resultDiv.classList.remove('loading');
-            }
-        }
-    </script>
+            <div class="card panel shadow-xl result-panel">
+                <div class="card-body">
+                    <div class="section-head">
+                        <div>
+                            <p class="eyebrow">Output</p>
+                            <h2>レスポンス</h2>
+                        </div>
+                        <span class="badge badge-info badge-soft">Preview</span>
+                    </div>
+                    <div id="result" class="result-box"></div>
+                    <p id="status-line" class="result-status">UI ready. API integration pending.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="/app.js"></script>
 </body>
+
 </html>

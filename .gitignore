@@ -2,3 +2,4 @@
 .env
 *.log
 GEMINI.md
+node_modules/

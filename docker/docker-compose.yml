@@ -1,0 +1,13 @@
+services:
+  app:
+    image: node:alpine
+    container_name: handson-04-app
+    working_dir: /app
+    command: sh -c "npm install && node server.js"
+    volumes:
+      - ./package.json:/app/package.json:ro
+      - ./public:/app/public
+      - ./server.js:/app/server.js:ro
+    ports:
+      - "8085:3000"
+    restart: unless-stopped
