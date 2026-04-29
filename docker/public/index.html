@@ -49,17 +49,32 @@
                 </div>
             </div>
 
-            <div class="card panel shadow-xl result-panel">
-                <div class="card-body">
-                    <div class="section-head">
-                        <div>
-                            <p class="eyebrow">Output</p>
-                            <h2>レスポンス</h2>
+            <div class="output-stack">
+                <div class="card panel shadow-xl result-panel">
+                    <div class="card-body">
+                        <div class="section-head">
+                            <div>
+                                <p class="eyebrow">Output</p>
+                                <h2>レスポンス</h2>
+                            </div>
+                            <span class="badge badge-info badge-soft">Preview</span>
                         </div>
-                        <span class="badge badge-info badge-soft">Preview</span>
+                        <div id="result" class="result-box"></div>
+                        <p id="status-line" class="result-status">UI ready. API integration pending.</p>
                     </div>
-                    <div id="result" class="result-box"></div>
-                    <p id="status-line" class="result-status">UI ready. API integration pending.</p>
+                </div>
+
+                <div class="card panel shadow-xl json-panel">
+                    <div class="card-body">
+                        <div class="section-head">
+                            <div>
+                                <p class="eyebrow">JSON</p>
+                                <h2>レスポンス JSON</h2>
+                            </div>
+                            <span class="badge badge-neutral badge-soft">Raw</span>
+                        </div>
+                        <pre id="response-json" class="json-box"></pre>
+                    </div>
                 </div>
             </div>
         </section>

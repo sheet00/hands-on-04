@@ -111,12 +111,28 @@ h2,
     z-index: 1;
     display: grid;
     grid-template-columns: 1fr 0.92fr;
+    align-items: start;
     gap: 22px;
     margin-top: 22px;
 }
 
 .panel {
     border-radius: 28px;
+}
+
+.workspace > .panel,
+.output-stack {
+    align-self: start;
+}
+
+.workspace > .panel {
+    height: auto;
+}
+
+.output-stack {
+    display: grid;
+    gap: 22px;
+    align-content: start;
 }
 
 .section-head {
@@ -170,7 +186,7 @@ h2,
 }
 
 .result-box {
-    min-height: 260px;
+    min-height: 220px;
     padding: 22px;
     border: 1px dashed rgba(50, 80, 160, 0.22);
     border-radius: 22px;
@@ -185,6 +201,27 @@ h2,
     margin: 14px 4px 0;
     color: var(--muted);
     font-size: 0.92rem;
+}
+
+.json-panel .card-body {
+    display: grid;
+    gap: 12px;
+}
+
+.json-box {
+    margin: 0;
+    min-height: 280px;
+    padding: 18px;
+    overflow: auto;
+    border: 1px solid rgba(32, 58, 115, 0.12);
+    border-radius: 18px;
+    background: #0f172a;
+    color: #d7e3ff;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 @media (max-width: 900px) {
